@@ -135,7 +135,7 @@ echo $i >$file.current.log;
 ##############################################################################
 
 #This is the NMAP line that you might want to modify to tune your scan:
-nmap -sS $target -oA $file.resumenmap.$i -F -Pn -T 4 --open -vvvv --min-rate 500 --max-rate 700 --min-rtt-timeout 100ms --min-hostgroup 256 --privileged -n;
+nmap -sS $target -oA $file.resumenmap.$i -P 0-65535 -Pn -T 4 --open -vvvv --min-rate 500 --max-rate 700 --min-rtt-timeout 100ms --min-hostgroup 256 --privileged -n;
 
 ###############################################################################
 
