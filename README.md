@@ -15,7 +15,7 @@ TIP: For big scans (like class A or B) subnetting in class C networks will be th
 
 Nmap scan will run with the following defaults: 
 
-nmap  $target -oA $file.resumenmap.$i -p 0-65535 -Pn -T 4 --open -vvvv --min-rate 500 --max-rate 700 --min-rtt-timeout 100ms --min-hostgroup 256 --privileged -n;
+nmap  $target -oA $file.resumenmap.$i -p 0-65535 -Pn -T 4 -sV --open -vvvv --min-rate 5500 --max-rate 5700 --min-rtt-timeout 100ms --min-hostgroup 256 --privileged -n;
 
 #Default scans (hardcoded Nmap options):
  #-Pn: Treat all hosts as online -- skip host discovery
