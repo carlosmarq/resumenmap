@@ -135,7 +135,7 @@ echo $i >$file.current.log;
 ##############################################################################
 
 #This is the NMAP line that you might want to modify to tune your scan:
-nmap  $target -oA $file.resumenmap.$i -p 0-65535 -Pn -T 4 --open -vvvv --min-rate 500 --max-rate 700 --min-rtt-timeout 100ms --min-hostgroup 256 --privileged -n;
+nmap  $target -oA $file.resumenmap.$i -p 0-65535 -Pn -T 4 -sV --open -vvvv --min-rate 5500 --max-rate 5700 --min-rtt-timeout 100ms --min-hostgroup 256 --privileged -n;
 
 ###############################################################################
 
@@ -203,6 +203,8 @@ echo ""
 	cat $file.resumenmap.openports.csv | grep -o -E "\b[0-9]{1,5}/open" --color |sort -n | uniq -c | sed 's/\/open//g' | sort -r > $file.resumenmap.portscount.csv
 	cat $file.resumenmap.openports.csv | grep -o -n -E "\b[0-9]{1,5}/open" --color | awk -F ":" '{print $1'}  | uniq -c | awk {'print $1'} > $file.port.ip
 	pr -mts  $file.resumenmap.hosts.csv $file.port.ip > $file.resumenmap.hostsportcount.csv  ; rm $file.port.ip
+#GEnerating a list of IPs listening a specific port	
+	for i in $(cat $file.resumenmap.ports.csv); do echo "Extracting hosts list for TCP port $i"; cat $file.resumenmap.openports.csv | grep "$i/open" | awk {'print $2'} >$i.ips; done;
 
 
 
