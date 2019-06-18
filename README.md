@@ -38,6 +38,7 @@ Grepable output of hosts In: TARGET.resumenmap.#.hosts.csv
 Grepable output of open ports in: TARGET.resumenmap.#.ports.csv 
 Grepable output of open ports in one line and comma separated in: TARGET.resumenmap.#.portsoneline.csv 
 Grepable output of IP with the count of open ports in: TARGET.resumenmap.#.hostsportcount.csv 
+Multiple files named $port.ips, listin all IP hosts that have an specific port open. 
 
 Current line being scanned TAREGETFILE.current.log
 
