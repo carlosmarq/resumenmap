@@ -70,21 +70,21 @@ The scan was completed on Fri 17 Apr 14:28:58 BST 2020 with the following result
 
 The reachable services include the flowing Transmission Control Protocol (TCP) ports:  
 
-22,443,3389,7004,7072,  
+22,443,3389,7001,7002,  
 
 The top 10 systems with the most open ports were:  
 
 IP/hostname   Number of Open Ports:
-10.253.253.101	3
-10.253.253.100	3
-10.253.253.207	1
-10.253.253.117	1
-10.253.253.115	1
-10.253.253.107	1
-10.149.8.87	1
-10.149.8.86	1
-10.149.8.85	1
-10.149.8.84	1  
+10.10.10.101	3
+10.10.10.100	3
+10.10.10.207	1
+10.10.10.117	1
+10.10.10.115	1
+10.10.10.107	1
+10.10.10.87	    1
+10.10.10.86	    1
+10.10.10.85	    1
+10.10.10.84	    1  
 
 The top 10 TCP reachable services were:  
 
@@ -92,8 +92,8 @@ Services   TCP Port number:
      46 443
       5 3389
       3 22
-      2 7072
-      2 7004  
+      2 7001
+      2 7002  
 ```
 
 ## License
