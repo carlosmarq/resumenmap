@@ -135,7 +135,7 @@ echo $i >$file.current.log;
 ##############################################################################
 
 #This is the NMAP line that you might want to modify to tune your scan:
-nmap  $target -oA $file.resumenmap.$i -p 0-65535 -Pn -T 4 -sV --open -vvvv --min-rate 5500 --max-rate 5700 --min-rtt-timeout 100ms --min-hostgroup 256 --privileged -n;
+nmap  $target -oA $file.resumenmap.$i -p 0-65535 -Pn -T 4 -sV --open -vvvv --min-rate 5500 --max-rate 5700 --min-rtt-timeout 100ms --privileged -n;
 
 ###############################################################################
 
@@ -203,8 +203,37 @@ echo ""
 	cat $file.resumenmap.openports.csv | grep -o -E "\b[0-9]{1,5}/open" --color |sort -n | uniq -c | sed 's/\/open//g' | sort -r > $file.resumenmap.portscount.csv
 	cat $file.resumenmap.openports.csv | grep -o -n -E "\b[0-9]{1,5}/open" --color | awk -F ":" '{print $1'}  | uniq -c | awk {'print $1'} > $file.port.ip
 	pr -mts  $file.resumenmap.hosts.csv $file.port.ip > $file.resumenmap.hostsportcount.csv  ; rm $file.port.ip
-#GEnerating a list of IPs listening a specific port	
+
+#Generating a list of IPs listening on a given port	
 	for i in $(cat $file.resumenmap.ports.csv); do echo "Extracting hosts list for TCP port $i"; cat $file.resumenmap.openports.csv | grep "$i/open" | awk {'print $2'} >$i.ips; done;
 
+#Capturing network configuration
+/sbin/ifconfig > $file.resumenmap.network.txt 
+route -evn >> $file.resumenmap.network.txt 
 
+#Generating executive data
+hosts=$(wc -l $file.resumenmap.openports.csv | awk {'print $1'})
+ports=$(wc -l $file.resumenmap.ports.csv | awk {'print $1'})
 
+	echo "" $'\n' > $file.resumenmap.report.txt
+    echo -n "SEGMENTATION TESTING RESULTS" $'\n' >> $file.resumenmap.report.txt	
+    echo "" $'\n' >> $file.resumenmap.report.txt
+    echo -n "The scan was completed on `date` with the following results:" $'\n' >> $file.resumenmap.report.txt	
+	echo "" $'\n' >> $file.resumenmap.report.txt
+	if [  $hosts -eq 0 ]; then
+		echo "No TCP open ports were identified in the defined scope." $'\n' >> $file.resumenmap.report.txt
+	else 
+        echo "$hosts systems and $ports TCP services were reachable from the point of view of the testing system." $'\n' >> $file.resumenmap.report.txt             
+        
+        echo "The reachable services include the following Transmission Control Protocol (TCP) ports: " $'\n' >> $file.resumenmap.report.txt
+        echo "`cat $file.resumenmap.portsoneline.csv` " $'\n' >> $file.resumenmap.report.txt
+        
+        echo "The top 10 systems with the most open ports were: " $'\n' >> $file.resumenmap.report.txt
+        echo "IP/hostname   Number of Open Ports:" >> $file.resumenmap.report.txt
+        echo "`sort -k2 -nr $file.resumenmap.hostsportcount.csv | head -n 10` " $'\n' >> $file.resumenmap.report.txt
+        
+        echo "The top 10 TCP reachable services were: " $'\n' >> $file.resumenmap.report.txt
+        echo "Services   TCP Port number: " >> $file.resumenmap.report.txt
+        echo "`sort -nr $file.resumenmap.portscount.csv | head -n 10` " $'\n' >> $file.resumenmap.report.txt  
+	fi	
+cat $file.resumenmap.report.txt 
