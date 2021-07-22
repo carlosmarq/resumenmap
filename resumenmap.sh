@@ -8,7 +8,7 @@ declare limit
 echo $file
 echo $starting
 
-#scanning input for paramaters
+#scanning input for parameters
 
 while getopts "f:l:R:T:hAVS" opt; do
   case $opt in
@@ -34,7 +34,7 @@ while getopts "f:l:R:T:hAVS" opt; do
 				starting=$OPTARG
 				echo "$starting is a positive integer";
 
-						#Is starting line greater that the lines present in target file?
+						#Is the starting line greater than the line present in the target file?
 						if [ $starting -gt $limit ]
 						then
 							echo "ERROR! $file has $limit lines, but you indicated starting from line $starting";
@@ -53,7 +53,7 @@ while getopts "f:l:R:T:hAVS" opt; do
 		echo "A tool for resuming and reporting Nmap scans using a text file input with defined targets. Should be executed as root.";
 		echo "Please use a targets file with one target per line (host, range or network).";
 		echo "Once executed, a file with the line number of the current scan is stored in $FILENAME.current.log";
-		echo "The Nmap scan will start reading the line indicated in the file FILENAME.current.log or the number indicated in the paramater -l (positivie integer) to start/resume a scan"
+		echo "The Nmap scan will start reading the line indicated in the file FILENAME.current.log or the number indicated in the parameter -l (positive integer) to start/resume a scan"
 		echo "The list of host with open ports, open ports and live hosts will be stored in multiple CVS output files."
 		echo "";
 		echo "SYNTAX: ./resumenmap.sh -f targets.txt -l Line_To_Start"
@@ -96,7 +96,7 @@ done
 								then
 									echo "starting line $starting in $file.current.log is a positive integer";
 
-						#Is starting line greater that the lines present in target file?
+						#Is starting the line greater that the line present in the target file?
 									if [ $starting -gt $limit ]
 									then
 										echo "ERROR! $file has $limit lines, but $file.current.log starting line is $starting";
@@ -129,7 +129,7 @@ echo "";
 echo "Testing network $i results wil be in file:" $file.resumenmap.$i;
 target=$(sed -n -e "$i p" $file);
 echo "Target network is:" $target;
-#Creating a $file.current.log file with the nbumber of the target test (number of line in the target file)
+#Creating a $file.current.log file with the number of the target test (number of line in the target file)
 echo $i >$file.current.log;
 
 ##############################################################################
@@ -147,7 +147,7 @@ done
 }
 
 
-#Call the funtion
+#Call the function
 #resumenmap target line
 #resumenmap $1 $2 $3
 resumenmap $file $start $limit
@@ -170,7 +170,7 @@ echo ""
 for (( i=1; i <= $limit; i++ ));
 do echo "Output of scan" $i $file.resumenmap.$i.gnmap:;
 	if grep --quiet "Nmap done" $file.resumenmap.$i.gnmap; then
-	echo "The scan $i has been compelted succcesfully:"
+	echo "The scan $i has been completed successfully:"
 	tail -1 $file.resumenmap.$i.gnmap| GREP_COLOR='01;32'  grep --color "done"
 	echo ""
 	else
@@ -204,8 +204,8 @@ echo ""
 	cat $file.resumenmap.openports.csv | grep -o -n -E "\b[0-9]{1,5}/open" --color | awk -F ":" '{print $1'}  | uniq -c | awk {'print $1'} > $file.port.ip
 	pr -mts  $file.resumenmap.hosts.csv $file.port.ip > $file.resumenmap.hostsportcount.csv  ; rm $file.port.ip
 
-#Generating a list of IPs listening on a given port	
-	for i in $(cat $file.resumenmap.ports.csv); do echo "Extracting hosts list for TCP port $i"; cat $file.resumenmap.openports.csv | grep "$i/open" | awk {'print $2'} >$i.ips; done;
+#Generating a list of IPs listening on a given port and target files IP:PORT	
+	for i in $(cat $file.resumenmap.ports.csv); do echo "Extracting hosts list for TCP port $i"; cat $file.resumenmap.openports.csv | grep "$i/open" | awk {'print $2'} >$i.ips; sed s/$/:$i/ $i.ips > $i.ips.target;done;
 
 #Capturing network configuration
 /sbin/ifconfig > $file.resumenmap.network.txt 
