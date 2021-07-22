@@ -1,25 +1,25 @@
-# Resumenmap v1.0
+# Resumenmap v1.1
 
-Bash script for resume Nmap scans. Intended to be used in segmentation tests.
+Bash script for pause and resume Nmap scans, and extract and group hosts and ports using grepable commands. 
 
 ## Usage
 
-The script reads a list of targets in a text file that can be indicated with the parameter -f, take each line as a target (could be a host, network, URL or range) and execute a Nmap full TCP syn scan scan per line. 
+The script reads a list of targets in a text file that can be indicated with the parameter -f, take each line as a target (could be a host, network, URL or range) and execute a Nmap full TCP syn scan per line. 
 
-If the task is interrupted, it will store in a file the number line that was currently being scanned. So once executed again, the scan will start scanning the last target that was being running. You can also indicate the starting line to read the TARGET file using the parameter -l (line is a positive integer).
+If the task is interrupted, it will store in a file the number line (position) that was currently being scanned. So once executed again, the scan will start scanning the last target that was running. You can also indicate the starting line to read the TARGET file using the parameter -l (line is a positive integer).
 
 ```
 ./resumenmap.sh -f TARGET -l Line_To_Start [OPTIONAL]
 
 ```
 
-TARGET is a plain text file, with one valid Nmap target per line (Either a host, range URL or a network). 
+TARGET is a plain text file, with one valid Nmap target per line (Either a host, range URL or a network). Please avoid spaces. 
 
-For example, if you have a 30 lines file scan called TARGET and you stop once target in row 15th was being scanned, the log file TARGET.current.log will store the number 15, and once executing resumenmap.sh -f TARGET, Nmap will continue scanning the target in line number 15. Once completed, the file TARGET.current.log will contain the integer 30.
+For example, if you have a 30 lines file called TARGET and you stop once target in row 15th was being scanned, the log file TARGET.current.log will store the number 15, and once executing resumenmap.sh -f TARGET, Nmap will continue scanning the target in line number 15. Once completed, the file TARGET.current.log will contain the integer 30.
 
 Might help in long scan test with multiple targets that should be interrupted and resumed.
 
-TIP: For big scans (like class A or B) subnetting in class C networks will be the best strategy.
+TIP: For big scans (like class A or B) subnetting in class C networks would be a good strategy.
 
 Nmap scan will run with the following defaults: 
 
@@ -53,7 +53,8 @@ Default Nmap, gnmap and xml output per scan, using the name format TARGET.resume
 * Grepable output of open ports in: TARGET.resumenmap.#.ports.csv 
 * Grepable output of open ports in one line and comma separated in: TARGET.resumenmap.#.portsoneline.csv 
 * Grepable output of IP with the count of open ports in: TARGET.resumenmap.#.hostsportcount.csv 
-* Multiple files named $port.ips, listin all IP hosts that have an specific port open. 
+* Multiple files named $port.ips, listing all IP hosts that have an specific port open. 
+* Multiple files named $port.ips.target, listing all open services using the format IP:PORT.  
 * Executive results brief in English resuming the statistics of the scan in TARGET.resumenmap.#.report.txt
 * System network configuration (ifconfig, route -evn) will be stored in TARGET.resumenmap.#.network.txt
 
