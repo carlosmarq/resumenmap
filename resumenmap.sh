@@ -200,9 +200,9 @@ echo ""
 	cat $file.resumenmap.openports.csv | awk '{print $2}' > $file.resumenmap.hosts.csv
 	cat $file.resumenmap.openports.csv |  grep -o -E "\b[0-9]{1,5}/open" --color |sort -n | uniq | sed 's/\/open//g' > $file.resumenmap.ports.csv
 	awk -vORS=, '{ print $1 }' $file.resumenmap.ports.csv >  $file.resumenmap.portsoneline.csv
-	cat $file.resumenmap.openports.csv | grep -o -E "\b[0-9]{1,5}/open" --color |sort -n | uniq -c | sed 's/\/open//g' | sort -r > $file.resumenmap.portscount.csv
+	cat $file.resumenmap.openports.csv | grep -o -E "\b[0-9]{1,5}/open" --color |sort -n | uniq -c | sed 's/\/open//g' | sort -rhk 1 > $file.resumenmap.portscount.csv
 	cat $file.resumenmap.openports.csv | grep -o -n -E "\b[0-9]{1,5}/open" --color | awk -F ":" '{print $1'}  | uniq -c | awk {'print $1'} > $file.port.ip
-	pr -mts  $file.resumenmap.hosts.csv $file.port.ip > $file.resumenmap.hostsportcount.csv  ; rm $file.port.ip
+	pr -mts  $file.resumenmap.hosts.csv $file.port.ip | sort -rhk 2 > $file.resumenmap.hostsportcount.csv  ; rm $file.port.ip
 
 #Generating a list of IPs listening on a given port and target files IP:PORT	
 	for i in $(cat $file.resumenmap.ports.csv); do echo "Extracting hosts list for TCP port $i"; cat $file.resumenmap.openports.csv | grep "$i/open" | awk {'print $2'} >$i.ips; sed s/$/:$i/ $i.ips > $i.ips.target;done;
